@@ -3,27 +3,23 @@
 #include <queue>
 
 class Game_map {
+
     
+
+public:
+
     int height_;
     int length_;
     std::vector <int> main_map_;
-
-public:
 
     Game_map(int h, int l, std::vector <int> m) : height_(h), length_(l), main_map_(m) {};
     ~Game_map() {}
 
     void print_map() {
         for(int i = 0; i < main_map_.size(); i++) {
-            if(i % length_ == 0 && i != 0) {
-                if(i == main_map_.size()) {
-                    std::cout << main_map_.at(i) << std::endl;
-                }
-                else {
-                    std::cout << main_map_.at(i) << ' ' << std::endl;
-                }
+            if(i % length_ == length_ -1 && i != 0) {
+                std::cout << main_map_.at(i) << std::endl;
             }
-
             else {  
                 std::cout << main_map_.at(i) << ' ';
             }
@@ -31,7 +27,7 @@ public:
         }
     }
 
-    void find_way(Game_map obj) {
+    void find_way() {
         int f = 0;
         for(int g = 0; g < main_map_.size(); g++) {
             if(main_map_.at(g) == 2) {
@@ -43,31 +39,71 @@ public:
         }
         
         int player_pos;
+        int finish_pos;
         for(int i = 0; i < main_map_.size(); i++) {
             if(main_map_.at(i) == 2) {
-                player_pos = main_map_.at(i);
+                player_pos = i;
+            }
+            if(main_map_.at(i) == 3) {
+                finish_pos = i;
             }
         }
 
         std::queue<int> q;
         q.push(player_pos);
 
-        while (!q.empty()) {
+        while(!q.empty()) {
             int curr = q.front();
             q.pop();
 
-            int current_val = main_map_.at(curr);
+            int current_val;
+            if(main_map_.at(curr) == 2) {
+                current_val = 0;
+            }
+            else{
+                current_val = main_map_.at(curr);
+            }
             std::vector <int> neighbors = { -1, 1, -length_, length_ };
 
-            for (int offset = 0; offset < neighbors.size(); offset++) {
-                int next = curr + offset;
+            for(int offset = 0; offset < neighbors.size(); offset++) {
+                int next = curr + neighbors.at(offset);
 
-                if (next < 0 || next >= main_map_.size()) continue;
-                if (offset == 1 && next % length_ == 0) continue;
-                if (offset == -1 && curr % length_ == 0) continue;
+                if(next < 0 || next >= main_map_.size()) continue;
+                if(offset == 1 && next % length_ == 0) continue;
+                if(offset == -1 && curr % length_ == 0) continue;
 
-                if (main_map_.at(next) == 0) { 
-                    main_map_.at(next) = current_val - 1;
+                if(main_map_.at(next) == 0) { 
+                    main_map_.at(next) = current_val -1;
+                    q.push(next);
+                }
+            }
+        }
+
+        q.push(finish_pos);
+
+        while(!q.empty()) {
+            int curr = q.front();
+            q.pop();
+
+            int current_val;
+            std::vector <int> neighbors = { -1, 1, -length_, length_ };
+            for(int j = 0; j > neighbors.size(); j++) {
+                if(main_map_.at(curr) + neighbors.at(j) < 0) {
+                    current_val = main_map_.at(curr) + neighbors.at(j) +1;
+                    std::cout << current_val;
+                }
+            }
+            std::cout << current_val;
+
+            for(int offset = 0; offset < neighbors.size(); offset++) {
+                int next = curr + neighbors.at(offset);
+
+                if(next < 0 || next >= main_map_.size()) continue;
+                if(offset == 1 && next % length_ == 0) continue;
+                if(offset == -1 && curr % length_ == 0) continue;
+
+                if(main_map_.at(next) +1 == current_val) { 
+                    main_map_.at(next) = '*';
                     q.push(next);
                 }
             }
@@ -96,6 +132,9 @@ int main() {
     };
 
     Game_map object = {5,5,a};
+    object.print_map();
+    std::cout << std::endl;
+    object.find_way();
     object.print_map();
     //object.find_way(object);
     //Game_map::print_map(object);
