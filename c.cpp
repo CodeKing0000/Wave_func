@@ -4,8 +4,6 @@
 
 class Game_map {
 
-    
-
 public:
 
     int height_;
@@ -65,12 +63,12 @@ public:
             }
             std::vector <int> neighbors = { -1, 1, -length_, length_ };
 
-            for(int offset = 0; offset < neighbors.size(); offset++) {
-                int next = curr + neighbors.at(offset);
+            for(int j = 0; j < neighbors.size(); j++) {
+                int next = curr + neighbors.at(j);
 
                 if(next < 0 || next >= main_map_.size()) continue;
-                if(offset == 1 && next % length_ == 0) continue;
-                if(offset == -1 && curr % length_ == 0) continue;
+                if(j == 1 && next % length_ == 0) continue;
+                if(j == -1 && curr % length_ == 0) continue;
 
                 if(main_map_.at(next) == 0) { 
                     main_map_.at(next) = current_val -1;
@@ -80,34 +78,32 @@ public:
         }
 
         q.push(finish_pos);
+        std::vector <int> a;
 
         while(!q.empty()) {
             int curr = q.front();
             q.pop();
 
-            int current_val;
+            int current_val = curr;
             std::vector <int> neighbors = { -1, 1, -length_, length_ };
-            for(int j = 0; j > neighbors.size(); j++) {
-                if(main_map_.at(curr) + neighbors.at(j) < 0) {
-                    current_val = main_map_.at(curr) + neighbors.at(j) +1;
-                    std::cout << current_val;
-                }
-            }
-            std::cout << current_val;
-
-            for(int offset = 0; offset < neighbors.size(); offset++) {
-                int next = curr + neighbors.at(offset);
+            for(int j = 0; j < neighbors.size(); j++) {
+                int next = curr + neighbors.at(j);
 
                 if(next < 0 || next >= main_map_.size()) continue;
-                if(offset == 1 && next % length_ == 0) continue;
-                if(offset == -1 && curr % length_ == 0) continue;
+                if(j == 1 && next % length_ == 0) continue;
+                if(j == -1 && curr % length_ == 0) continue;
+                if(main_map_.at(next) == 1 ) continue;
+                std::cout << main_map_.at(current_val) << "  " << main_map_.at(next) << std::endl;
 
-                if(main_map_.at(next) +1 == current_val) { 
-                    main_map_.at(next) = '*';
+                if(main_map_.at(next) == current_val || current_val == finish_pos) { 
+                    a.push_back(next); 
                     q.push(next);
                 }
             }
         }
+        for(int i = 0; i < a.size(); i++) {
+            std::cout << a.at(i) << std::endl;
+        }  
     }
 
     int height() {
