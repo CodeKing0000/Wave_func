@@ -93,16 +93,21 @@ public:
                 if(j == 1 && next % length_ == 0) continue;
                 if(j == -1 && curr % length_ == 0) continue;
                 if(main_map_.at(next) == 1 ) continue;
-                std::cout << main_map_.at(current_val) << "  " << main_map_.at(next) << std::endl;
+                //std::cout << main_map_.at(current_val) << " and " << current_val << "   " << main_map_.at(next) << " and " << next << std::endl;
 
-                if(main_map_.at(next) == current_val || current_val == finish_pos) { 
+                if(main_map_.at(next) -1 == main_map_.at(current_val) || current_val == finish_pos) { 
                     a.push_back(next); 
                     q.push(next);
                 }
             }
         }
         for(int i = 0; i < a.size(); i++) {
-            std::cout << a.at(i) << std::endl;
+            main_map_.at(a.at(i)) = 8;
+        }
+        for(int i = 0; i < main_map_.size(); i++) {
+            if(main_map_.at(i) < 0) {
+                main_map_.at(i) = 0;
+            }
         }  
     }
 
@@ -132,8 +137,6 @@ int main() {
     std::cout << std::endl;
     object.find_way();
     object.print_map();
-    //object.find_way(object);
-    //Game_map::print_map(object);
 
 }
 
